@@ -7,7 +7,7 @@ import PhoneInput, { isValidPhone } from './PhoneInput';
 import PriceInput from './PriceInput';
 
 // API Client Helper
-const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : `http://${window.location.hostname}:3000/api`;
+const API_URL = 'https://kitchencrm-production.up.railway.app/api';
 
 // Formatting helpers
 const formatPrice = (val) => {
