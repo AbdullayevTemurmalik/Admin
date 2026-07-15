@@ -1,0 +1,119 @@
+/* responsive.css - Responsive breakpoints and adjustments */
+
+/* Base responsiveness adjustments */
+@media (max-width: 2560px) {
+  html { font-size: 16px; }
+}
+
+@media (max-width: 1920px) {
+  html { font-size: 15.5px; }
+}
+
+@media (max-width: 1700px) {
+  html { font-size: 15px; }
+}
+
+@media (max-width: 1550px) {
+  html { font-size: 14.5px; }
+}
+
+@media (max-width: 1400px) {
+  .grid-4 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 1200px) {
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .sidebar {
+    width: 240px;
+  }
+}
+
+@media (max-width: 992px) {
+  .admin-layout {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+  }
+  .sidebar-menu {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 0.5rem;
+  }
+  .sidebar-link {
+    margin-bottom: 0;
+    padding: 0.5rem 0.75rem;
+  }
+  .main-content {
+    padding: 1rem;
+  }
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+  .flex-row.justify-between {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .modal-content {
+    width: 95%;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  html { font-size: 14px; }
+  .app-container {
+    padding: 0.75rem;
+  }
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 425px) {
+  .sidebar-menu {
+    justify-content: space-between;
+  }
+  .sidebar-link span {
+    display: none; /* Icon-only menu for extra small screens */
+  }
+  .tab-buttons {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 375px) {
+  .btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 320px) {
+  html { font-size: 13px; }
+  .card {
+    padding: 0.75rem;
+  }
+}
