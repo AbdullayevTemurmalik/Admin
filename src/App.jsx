@@ -9,6 +9,12 @@ import PriceInput from './PriceInput';
 // API Client Helper
 const API_URL = 'https://kitchencrm-production.up.railway.app/api';
 
+const getSecureUrl = (url) => {
+  if (!url) return '';
+  if (url.startsWith('blob:')) return url;
+  return url.replace(/^http:\/\//i, 'https://');
+};
+
 // Formatting helpers
 const formatPrice = (val) => {
   if (val === undefined || val === null || val === '') return '';
@@ -811,7 +817,7 @@ function SuperAdminBranches({ addToast, setModal }) {
               <div className="form-group">
                 <label className="form-label">Filial logotipi</label>
                 <div className="flex-row gap-2 align-center">
-                  {logo && <img src={logo} alt="Logo" style={{ width: '40px', height: '40px', borderRadius: '4px', objectFit: 'cover' }} />}
+                  {logo && <img src={getSecureUrl(logo)} alt="Logo" style={{ width: '40px', height: '40px', borderRadius: '4px', objectFit: 'cover' }} />}
                   <input 
                     type="file" 
                     accept="image/*" 
@@ -883,7 +889,7 @@ function SuperAdminBranches({ addToast, setModal }) {
                   <tr key={b.id}>
                     <td>
                       {b.logo ? (
-                        <img src={b.logo} alt="logo" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', border: '1px solid var(--border-color)' }} />
+                        <img src={getSecureUrl(b.logo)} alt="logo" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', border: '1px solid var(--border-color)' }} />
                       ) : (
                         <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'var(--border-color)', display: 'grid', placeContent: 'center', fontWeight: 'bold' }}>
                           {b.name?.charAt(0).toUpperCase()}
@@ -1957,7 +1963,7 @@ function ManagerMenu({ user, addToast, setModal }) {
                   <div className="form-group">
                     <label className="form-label">Mahsulot rasmi</label>
                     <div className="flex-row gap-2 align-center">
-                      {prodImageUrl && <img src={prodImageUrl} alt="Product" style={{ width: '40px', height: '40px', borderRadius: '4px', objectFit: 'cover' }} />}
+                      {prodImageUrl && <img src={getSecureUrl(prodImageUrl)} alt="Product" style={{ width: '40px', height: '40px', borderRadius: '4px', objectFit: 'cover' }} />}
                       <input 
                         type="file" 
                         accept="image/*" 
@@ -2021,7 +2027,7 @@ function ManagerMenu({ user, addToast, setModal }) {
                       <tr key={prod.id}>
                         <td>
                           {prod.imageUrl ? (
-                            <img src={prod.imageUrl} alt={prod.name} style={{ width: '45px', height: '45px', borderRadius: '8px', objectFit: 'cover' }} />
+                            <img src={getSecureUrl(prod.imageUrl)} alt={prod.name} style={{ width: '45px', height: '45px', borderRadius: '8px', objectFit: 'cover' }} />
                           ) : (
                             <div style={{ width: '45px', height: '45px', borderRadius: '8px', backgroundColor: 'var(--border-color)', display: 'grid', placeContent: 'center', color: 'var(--text-secondary)' }}>
                               <Icons.Coffee size={20} />
