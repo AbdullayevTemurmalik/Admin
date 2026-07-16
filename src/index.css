@@ -638,3 +638,12 @@ input[type="file"]::-webkit-file-upload-button:hover {
   background-color: var(--card-hover);
   border-color: var(--primary-color);
 }
+
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 0.25rem;
+}

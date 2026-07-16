@@ -139,6 +139,14 @@ export const Check = ({ size = 20, className }) => (
   </svg>
 );
 
+export const Menu = ({ size = 20, className }) => (
+  <svg {...iconProps} width={size} height={size} className={className}>
+    <line x1="4" x2="20" y1="12" y2="12" />
+    <line x1="4" x2="20" y1="6" y2="6" />
+    <line x1="4" x2="20" y1="18" y2="18" />
+  </svg>
+);
+
 export const AlertTriangle = ({ size = 20, className }) => (
   <svg {...iconProps} width={size} height={size} className={className}>
     <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />

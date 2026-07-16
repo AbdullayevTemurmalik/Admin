@@ -110,6 +110,7 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [toasts, setToasts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Modals state
   const [modal, setModal] = useState(null); // { type, title, body, onConfirm, confirmText, cancelText }
@@ -227,7 +228,7 @@ export default function App() {
       ) : user ? (
         <div className="admin-layout">
           {/* Sidebar */}
-          <div className="sidebar">
+          <div className={`sidebar ${isMobileMenuOpen ? 'open' : ''}`}>
             <div className="sidebar-brand">
               <Icons.Shield size={24} className="stat-icon-info" />
               <span>KITCHEN<span>ERP</span></span>
@@ -236,15 +237,15 @@ export default function App() {
             <div className="sidebar-menu">
               {user.role === 'SUPER_ADMIN' ? (
                 <>
-                  <a href="#/superadmin/dashboard" className={`sidebar-link ${currentPath === '#/superadmin/dashboard' ? 'active' : ''}`}>
+                  <a href="#/superadmin/dashboard" className={`sidebar-link ${currentPath === '#/superadmin/dashboard' ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>
                     <Icons.LayoutDashboard size={20} />
                     <span>Dashboard</span>
                   </a>
-                  <a href="#/superadmin/branches" className={`sidebar-link ${currentPath === '#/superadmin/branches' ? 'active' : ''}`}>
+                  <a href="#/superadmin/branches" className={`sidebar-link ${currentPath === '#/superadmin/branches' ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>
                     <Icons.Layers size={20} />
                     <span>Filiallar</span>
                   </a>
-                  <a href="#/superadmin/managers" className={`sidebar-link ${currentPath === '#/superadmin/managers' ? 'active' : ''}`}>
+                  <a href="#/superadmin/managers" className={`sidebar-link ${currentPath === '#/superadmin/managers' ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>
                     <Icons.Users size={20} />
                     <span>Menejerlar</span>
                   </a>
@@ -255,39 +256,39 @@ export default function App() {
                 </>
               ) : (
                 <>
-                  <a href="#/manager/dashboard" className={`sidebar-link ${currentPath === '#/manager/dashboard' ? 'active' : ''}`}>
+                  <a href="#/manager/dashboard" className={`sidebar-link ${currentPath === '#/manager/dashboard' ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>
                     <Icons.LayoutDashboard size={20} />
-                    <span>Dashboard</span>
+                    <span>Boshqaruv (Dashboard)</span>
                   </a>
-                  <a href="#/manager/employees" className={`sidebar-link ${currentPath === '#/manager/employees' ? 'active' : ''}`}>
+                  <a href="#/manager/users" className={`sidebar-link ${currentPath === '#/manager/users' ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>
                     <Icons.Users size={20} />
                     <span>Xodimlar</span>
                   </a>
-                  <a href="#/manager/menu" className={`sidebar-link ${currentPath === '#/manager/menu' ? 'active' : ''}`}>
+                  <a href="#/manager/products" className={`sidebar-link ${currentPath === '#/manager/products' ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>
                     <Icons.Coffee size={20} />
-                    <span>Menu & Kategoriya</span>
+                    <span>Menyu / Mahsulotlar</span>
                   </a>
-                  <a href="#/manager/tables" className={`sidebar-link ${currentPath === '#/manager/tables' ? 'active' : ''}`}>
+                  <a href="#/manager/inventory" className={`sidebar-link ${currentPath === '#/manager/inventory' ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>
                     <Icons.Layers size={20} />
-                    <span>Stollar & VIP</span>
+                    <span>Ombor (Sklad)</span>
                   </a>
-                  <a href="#/manager/inventory" className={`sidebar-link ${currentPath === '#/manager/inventory' ? 'active' : ''}`}>
+                  <a href="#/manager/orders" className={`sidebar-link ${currentPath === '#/manager/orders' ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>
                     <Icons.ShoppingBag size={20} />
-                    <span>Omborxona</span>
+                    <span>Buyurtmalar & Savdo</span>
                   </a>
-                  <a href="#/manager/discounts" className={`sidebar-link ${currentPath === '#/manager/discounts' ? 'active' : ''}`}>
+                  <a href="#/manager/finance" className={`sidebar-link ${currentPath === '#/manager/finance' ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>
                     <Icons.CreditCard size={20} />
+                    <span>Moliya & Hisobotlar</span>
+                  </a>
+                  <a href="#/manager/discounts" className={`sidebar-link ${currentPath === '#/manager/discounts' ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>
+                    <Icons.DollarSign size={20} />
                     <span>Chegirmalar</span>
                   </a>
-                  <a href="#/manager/expenses" className={`sidebar-link ${currentPath === '#/manager/expenses' ? 'active' : ''}`}>
-                    <Icons.DollarSign size={20} />
-                    <span>Xarajatlar</span>
-                  </a>
-                  <a href="#/manager/notifications" className={`sidebar-link ${currentPath === '#/manager/notifications' ? 'active' : ''}`}>
+                  <a href="#/manager/notifications" className={`sidebar-link ${currentPath === '#/manager/notifications' ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>
                     <Icons.Bell size={20} />
                     <span>Bildirishnomalar</span>
                   </a>
-                  <a href="#/manager/settings" className={`sidebar-link ${currentPath === '#/manager/settings' ? 'active' : ''}`}>
+                  <a href="#/manager/settings" className={`sidebar-link ${currentPath === '#/manager/settings' ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>
                     <Icons.Settings size={20} />
                     <span>Printer & KDS</span>
                   </a>
@@ -312,6 +313,9 @@ export default function App() {
           <div className="main-content">
             <div className="navbar">
               <div className="flex-row gap-2 align-center">
+                <button className="mobile-menu-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                  <Icons.Menu size={24} />
+                </button>
                 <h2 style={{ fontSize: '1.25rem' }}>
                   {user.role === 'SUPER_ADMIN' ? 'Super Admin Boshqaruvi' : `Menejer Boshqaruvi (${user.branchName})`}
                 </h2>
