@@ -277,6 +277,10 @@ export default function App() {
                     <Icons.DollarSign size={20} />
                     <span>Xarajatlar</span>
                   </a>
+                  <a href="#/manager/notifications" className={`sidebar-link ${currentPath === '#/manager/notifications' ? 'active' : ''}`}>
+                    <Icons.Bell size={20} />
+                    <span>Bildirishnomalar</span>
+                  </a>
                   <a href="#/manager/settings" className={`sidebar-link ${currentPath === '#/manager/settings' ? 'active' : ''}`}>
                     <Icons.Settings size={20} />
                     <span>Printer & KDS</span>
@@ -328,6 +332,7 @@ export default function App() {
               {currentPath === '#/manager/inventory' && <ManagerInventory user={user} addToast={addToast} setModal={setModal} />}
               {currentPath === '#/manager/discounts' && <ManagerDiscounts user={user} addToast={addToast} setModal={setModal} />}
               {currentPath === '#/manager/expenses' && <ManagerExpenses user={user} addToast={addToast} setModal={setModal} />}
+              {currentPath === '#/manager/notifications' && <ManagerNotifications user={user} addToast={addToast} />}
               {currentPath === '#/manager/settings' && <ManagerSettings user={user} addToast={addToast} setModal={setModal} />}
             </div>
           </div>
@@ -646,8 +651,6 @@ function SuperAdminBranches({ addToast, setModal }) {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [logo, setLogo] = useState('');
-  const [latitude, setLatitude] = useState('');
-  const [longitude, setLongitude] = useState('');
   const [isActive, setIsActive] = useState(true);
   const [showForm, setShowForm] = useState(false);
 
@@ -673,8 +676,6 @@ function SuperAdminBranches({ addToast, setModal }) {
     setPhone('');
     setEmail('');
     setLogo('');
-    setLatitude('');
-    setLongitude('');
     setIsActive(true);
     setShowForm(false);
   };
@@ -685,7 +686,10 @@ function SuperAdminBranches({ addToast, setModal }) {
       addToast('Filial nomi kiritilishi shart', 'warning');
       return;
     }
-    if (phone && !isValidPhone(phone)) {
+    let finalPhone = phone;
+    if (finalPhone === '+998') finalPhone = '';
+
+    if (finalPhone && !isValidPhone(finalPhone)) {
       addToast("Telefon raqami noto'g'ri formatda. Format: +998 (90) 123 45 67", 'warning');
       return;
     }
@@ -693,11 +697,9 @@ function SuperAdminBranches({ addToast, setModal }) {
     const payload = {
       name,
       address,
-      phone,
+      phone: finalPhone,
       email,
       logo,
-      latitude: latitude ? parseFloat(latitude) : null,
-      longitude: longitude ? parseFloat(longitude) : null,
       isActive
     };
 
@@ -730,8 +732,6 @@ function SuperAdminBranches({ addToast, setModal }) {
     setPhone(b.phone || '');
     setEmail(b.email || '');
     setLogo(b.logo || '');
-    setLatitude(b.latitude || '');
-    setLongitude(b.longitude || '');
     setIsActive(b.isActive !== false);
     setShowForm(true);
   };
@@ -842,13 +842,6 @@ function SuperAdminBranches({ addToast, setModal }) {
                   />
                 </div>
               </div>
-              <div className="form-group">
-                <label className="form-label">Kordinatalar (Kenglik / Uzunlik)</label>
-                <div className="flex-row gap-2">
-                  <input type="number" step="any" placeholder="Lat (Kenglik)" className="form-input" value={latitude} onChange={e => setLatitude(e.target.value)} />
-                  <input type="number" step="any" placeholder="Lng (Uzunlik)" className="form-input" value={longitude} onChange={e => setLongitude(e.target.value)} />
-                </div>
-              </div>
             </div>
 
             <div className="form-group flex-row gap-4 align-center mt-2">
@@ -881,7 +874,6 @@ function SuperAdminBranches({ addToast, setModal }) {
                   <th>Nomi</th>
                   <th>Telefon</th>
                   <th>Manzil</th>
-                  <th>Kordinatalari</th>
                   <th>Status</th>
                   <th style={{ textAlign: 'right' }}>Amallar</th>
                 </tr>
@@ -901,9 +893,6 @@ function SuperAdminBranches({ addToast, setModal }) {
                     <td style={{ fontWeight: 600 }}>{b.name}</td>
                     <td>{b.phone || '-'}</td>
                     <td>{b.address || '-'}</td>
-                    <td style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                      {b.latitude && b.longitude ? `${parseFloat(b.latitude).toFixed(4)}, ${parseFloat(b.longitude).toFixed(4)}` : '-'}
-                    </td>
                     <td>
                       <span className={`badge ${b.isActive !== false ? 'badge-success' : 'badge-danger'}`} style={{ cursor: 'pointer' }} onClick={() => toggleBranchStatus(b)}>
                         {b.isActive !== false ? 'Faol' : 'Nofaol'}
@@ -3214,6 +3203,103 @@ function ManagerSettings({ user, addToast, setModal }) {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+// ---------------- 13. MANAGER NOTIFICATIONS ----------------
+function ManagerNotifications({ user, addToast }) {
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchNotifs = async () => {
+    setLoading(true);
+    const res = await apiCall('/notifications?limit=50');
+    if (res.success) {
+      setNotifications(res.data.rows || []);
+    } else {
+      addToast(res.error || 'Xatolik', 'error');
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchNotifs();
+  }, []);
+
+  const markAsRead = async (id) => {
+    const res = await apiCall(`/notifications/${id}/read`, { method: 'PUT' });
+    if (res.success) {
+      setNotifications(prev => prev.map(n => n.id === id ? { ...n, isRead: true } : n));
+    }
+  };
+
+  const deleteNotif = async (id) => {
+    const res = await apiCall(`/notifications/${id}`, { method: 'DELETE' });
+    if (res.success) {
+      addToast('O\'chirildi', 'success');
+      setNotifications(prev => prev.filter(n => n.id !== id));
+    }
+  };
+
+  return (
+    <div>
+      <div className="flex-row justify-between align-center mb-4">
+        <div>
+          <h3 style={{ fontSize: '1.5rem', fontWeight: 700 }}>Bildirishnomalar</h3>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Tizimdagi barcha ogohlantirish va bekor qilingan buyurtmalar</p>
+        </div>
+        <button className="btn btn-secondary btn-icon" onClick={fetchNotifs}>
+          <Icons.RefreshCw size={18} />
+          <span>Yangilash</span>
+        </button>
+      </div>
+
+      <div className="card p-0">
+        {loading ? (
+          <div style={{ display: 'grid', placeContent: 'center', height: '200px' }}>
+            <div className="spinner"></div>
+          </div>
+        ) : notifications.length === 0 ? (
+          <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
+            Hozircha bildirishnomalar yo'q.
+          </div>
+        ) : (
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Vaqt</th>
+                <th>Xabar</th>
+                <th>Holat</th>
+                <th style={{ textAlign: 'right' }}>Amallar</th>
+              </tr>
+            </thead>
+            <tbody>
+              {notifications.map(n => (
+                <tr key={n.id} style={{ opacity: n.isRead ? 0.7 : 1, backgroundColor: n.isRead ? 'transparent' : 'rgba(255, 60, 60, 0.05)' }}>
+                  <td style={{ whiteSpace: 'nowrap' }}>{new Date(n.createdAt).toLocaleString()}</td>
+                  <td style={{ maxWidth: '400px', whiteSpace: 'normal', fontWeight: n.isRead ? 400 : 600 }}>{n.message}</td>
+                  <td>
+                    {n.isRead ? <span className="badge badge-success">O'qilgan</span> : <span className="badge badge-danger">Yangi</span>}
+                  </td>
+                  <td style={{ textAlign: 'right' }}>
+                    <div className="flex-row gap-2 justify-end">
+                      {!n.isRead && (
+                        <button className="btn btn-secondary btn-icon" onClick={() => markAsRead(n.id)} title="O'qildi deb belgilash">
+                          <Icons.Check size={16} />
+                        </button>
+                      )}
+                      <button className="btn btn-secondary btn-icon" style={{ color: 'var(--danger-color)' }} onClick={() => deleteNotif(n.id)} title="O'chirish">
+                        <Icons.Delete size={16} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
     </div>
   );
 }
