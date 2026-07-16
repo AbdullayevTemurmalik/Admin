@@ -3282,7 +3282,7 @@ function ManagerNotifications({ user, addToast }) {
             </thead>
             <tbody>
               {notifications.map(n => (
-                <tr key={n.id} style={{ opacity: n.isRead ? 0.7 : 1, backgroundColor: n.isRead ? 'transparent' : 'rgba(255, 60, 60, 0.05)' }}>
+                <tr key={n.id} style={{ opacity: n.isRead ? 0.7 : 1, backgroundColor: n.isRead ? 'transparent' : 'rgba(255, 60, 60, 0.05)', cursor: n.isRead ? 'default' : 'pointer' }} onClick={() => !n.isRead && markAsRead(n.id)}>
                   <td style={{ whiteSpace: 'nowrap' }}>{new Date(n.createdAt).toLocaleString()}</td>
                   <td style={{ maxWidth: '400px', whiteSpace: 'normal', fontWeight: n.isRead ? 400 : 600 }}>{n.message}</td>
                   <td>
